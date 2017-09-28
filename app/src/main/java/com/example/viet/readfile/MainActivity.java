@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     List<String> locations = new ArrayList<>();
     String num;
     EditText submitted;
+    Cities mCity;
 
     TextView txtView;
     TextView txtView2;
@@ -65,24 +67,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if (Option() <= 100) {
-                        String original = locations.get(Option());
-                        String[] separated = original.split(",");
-                        txtView.setText(separated[0]);
-                        txtView2.setText(separated[1]);
-                        txtView3.setText(separated[2]);
-                        txtView4.setText(separated[3]);
-                    } else {
-                        txtView.setText("No Data");
-                        txtView2.setText("");
-                        txtView3.setText("");
-                        txtView4.setText("");
-                    }
+                    DataPopulate(Option());
                     return true;
                 }
                 return false;
             }
         });
+
+        listNote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int whichItem, long id) {
+                //txtView.setText(String.valueOf(whichItem));
+                DataPopulate(whichItem);
+                submitted.setText("");
+            }
+        });
+    }
+
+    public void DataPopulate(int num) {
+        if (num <= 100) {
+            String original = locations.get(num);
+            String[] separated = original.split(",");
+            txtView.setText(separated[0]);
+            txtView2.setText(separated[1]);
+            txtView3.setText(separated[2]);
+            txtView4.setText(separated[3]);
+        } else {
+            txtView.setText("No Data");
+            txtView2.setText("");
+            txtView3.setText("");
+            txtView4.setText("");
+        }
     }
 
     public void createNewNote(Cities n) {
