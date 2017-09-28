@@ -71,6 +71,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/txt4" />
+        android:layout_below="@+id/txt4"
+        android:background="#7BC6E8"/>
 
 </RelativeLayout>
