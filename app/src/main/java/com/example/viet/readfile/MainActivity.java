@@ -1,12 +1,17 @@
 package com.example.viet.readfile;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -21,12 +26,13 @@ public class MainActivity extends AppCompatActivity {
     List<String> locations = new ArrayList<>();
     String num;
     EditText submitted;
-    Button button;
 
     TextView txtView;
     TextView txtView2;
     TextView txtView3;
     TextView txtView4;
+
+    private Adapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +46,20 @@ public class MainActivity extends AppCompatActivity {
         txtView3 = (TextView) findViewById(R.id.txt3);
         txtView4 = (TextView) findViewById(R.id.txt4);
 
+        mAdapter = new Adapter();
+        ListView listNote = (ListView) findViewById(R.id.listView);
+        listNote.setAdapter(mAdapter);
+
         convertStreamToString(getResources().openRawResource(R.raw.au_locations));
+
+        for (int i = 0; i < locations.size(); i++) {
+            String original = locations.get(i);
+            String[] separated = original.split(",");
+            Cities city = new Cities();
+            String input = String.valueOf(i) + ". " + separated[0];
+            city.setCity(input);
+            createNewNote(city);
+        }
 
         submitted.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -64,8 +83,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
 
-
+    public void createNewNote(Cities n) {
+        mAdapter.addNote(n);
     }
 
     public int Option() {
@@ -79,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void convertStreamToString(InputStream is) {
         String line;
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         try {
             while ((line = reader.readLine()) != null) {
@@ -94,4 +116,42 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public class Adapter extends BaseAdapter {
+        List<Cities> cityList = new ArrayList<>();
+
+        @Override
+        public int getCount() {
+            return cityList.size();
+        }
+
+        @Override
+        public Cities getItem(int whichItem) {
+            return cityList.get(whichItem);
+        }
+
+        @Override
+        public long getItemId(int whichItem) {
+            return whichItem;
+        }
+
+        @Override
+        public View getView(int whichItem, View view, ViewGroup viewGroup) {
+            if (view == null) {
+                LayoutInflater intflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = intflater.inflate(R.layout.listitem, viewGroup, false);
+            }
+
+            TextView txtCity = view.findViewById(R.id.txtCity);
+            Cities temp = cityList.get(whichItem);
+            txtCity.setText(temp.getCity());
+            return view;
+        }
+
+        public void addNote(Cities n) {
+            cityList.add(n);
+            notifyDataSetChanged();
+        }
+    }
+
 }
