@@ -2,7 +2,9 @@ package com.example.viet.readfile;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         submitted = (EditText) findViewById(R.id.num);
-        button = (Button) findViewById(R.id.button);
 
         txtView = (TextView) findViewById(R.id.txt);
         txtView2 = (TextView) findViewById(R.id.txt2);
@@ -41,23 +42,26 @@ public class MainActivity extends AppCompatActivity {
 
         convertStreamToString(getResources().openRawResource(R.raw.au_locations));
 
-
-        button.setOnClickListener(new View.OnClickListener() {
+        submitted.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
-            public void onClick(View view) {
-                if (Option() <= 100) {
-                    String original = locations.get(Option());
-                    String[] separated = original.split(",");
-                    txtView.setText(separated[0]);
-                    txtView2.setText(separated[1]);
-                    txtView3.setText(separated[2]);
-                    txtView4.setText(separated[3]);
-                } else {
-                    txtView.setText("No Data");
-                    txtView2.setText("");
-                    txtView3.setText("");
-                    txtView4.setText("");
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (Option() <= 100) {
+                        String original = locations.get(Option());
+                        String[] separated = original.split(",");
+                        txtView.setText(separated[0]);
+                        txtView2.setText(separated[1]);
+                        txtView3.setText(separated[2]);
+                        txtView4.setText(separated[3]);
+                    } else {
+                        txtView.setText("No Data");
+                        txtView2.setText("");
+                        txtView3.setText("");
+                        txtView4.setText("");
+                    }
+                    return true;
                 }
+                return false;
             }
         });
 
@@ -65,9 +69,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int Option() {
-        int selected;
+        int selected = 999;
         num = submitted.getText().toString();
-        selected = Integer.valueOf(num);
+        if (!num.matches("")) {
+            selected = Integer.valueOf(num);
+        }
         return selected;
     }
 
