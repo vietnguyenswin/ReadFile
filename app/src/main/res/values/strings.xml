@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">ReadFile</string>
+    <string name="app_name">ReadFile by vietnguyenswin</string>
+    <string name="action_add">Add new location</string>
+    <string name="edit_city">City</string>
+    <string name="edit_lat">Latitude</string>
+    <string name="edit_long">Longitude</string>
+    <string name="edit_timezone">Timezone with format Australia/[...]</string>
+    <string name="btn_ok">Submit</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="err_message">Please check your inputs again.</string>
 </resources>
